@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -16,13 +17,55 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  getPermission() async {
+    var status = await Permission.contacts.status;
+    if ( status.isGranted ) {
+      print('Permission is already granted');
+    } else {
+      print('No Permission');
+      await Permission.contacts.request();
+
+      if ( status.isGranted ) {
+        print('Permission is granted');
+      } else {
+        print('Permission is denied');
+      }
+    }
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getPermission();
+  // }
+
   var people = ['John', 'Doe', 'Jane'];
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+          title: Text('My App'),
+          centerTitle: true,
+          backgroundColor: Colors.red[600],
+          actions: [
+            IconButton(
+              onPressed: () {
+                getPermission();
+                // openAppSettings();
+              },
+              icon: Icon(Icons.contacts),
+            ),
+            IconButton(
+              onPressed: () {
+                print('Clicked');
+              },
+              icon: Icon(Icons.search),
+            ),
+          ],
+      ),
       body: ListView.builder(
         itemCount: people.length,
         itemBuilder: (context, index) {
@@ -61,21 +104,19 @@ class InputDialog extends StatelessWidget {
     required this.addPerson,
   });
 
-  String name = '';
+  var inputData = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Add Person'),
       content: TextField(
-        onChanged: (value) {
-          name = value;
-        },
+        controller: inputData,
       ),
       actions: [
         ElevatedButton(
           onPressed: () {
-            addPerson(name);
+            addPerson(inputData.text);
             Navigator.of(context).pop();
           },
           child: Text('Add'),
