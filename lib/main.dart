@@ -8,9 +8,14 @@ void main() {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   var people = ['John', 'Doe', 'Jane'];
 
   // This widget is the root of your application.
@@ -19,7 +24,7 @@ class MyApp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: ListView.builder(
-        itemCount: 3,
+        itemCount: people.length,
         itemBuilder: (context, index) {
           return ListTile(
             leading: Icon(Icons.person),
@@ -34,12 +39,54 @@ class MyApp extends StatelessWidget {
           showDialog(
               context: context,
               builder: (context) {
-                return Dialog(
-                  child: Text('Hello'),
+                return InputDialog(
+                  addPerson: (name) {
+                    setState(() {
+                      people.add(name);
+                    });
+                  }
                 );
               });
         },
       ),
+    );
+  }
+}
+
+class InputDialog extends StatelessWidget {
+  final Function(String) addPerson;
+
+  InputDialog({
+    super.key,
+    required this.addPerson,
+  });
+
+  String name = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Add Person'),
+      content: TextField(
+        onChanged: (value) {
+          name = value;
+        },
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            addPerson(name);
+            Navigator.of(context).pop();
+          },
+          child: Text('Add'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('cancel'),
+        ),
+      ],
     );
   }
 }
