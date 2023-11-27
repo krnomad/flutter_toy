@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -40,20 +41,20 @@ class _MyAppState extends State<MyApp> {
   //   getPermission();
   // }
 
-  var people = ['John', 'Doe', 'Jane'];
+  var people = [];
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('My App'),
-          centerTitle: true,
+          title: Text('My App (${people.length})'),
           backgroundColor: Colors.red[600],
           actions: [
             IconButton(
               onPressed: () {
                 getPermission();
+                loadContacts();
                 // openAppSettings();
               },
               icon: Icon(Icons.contacts),
@@ -83,49 +84,107 @@ class _MyAppState extends State<MyApp> {
               context: context,
               builder: (context) {
                 return InputDialog(
-                  addPerson: (name) {
-                    setState(() {
-                      people.add(name);
-                    });
-                  }
+                  addContact: addContact,
                 );
               });
         },
       ),
     );
   }
+
+  void loadContacts() async {
+    // Iterable<Contact> contacts = await ContactsService.getContacts();
+    var contacts = await ContactsService.getContacts();
+    setState(() {
+      people.clear();
+      contacts.forEach((element) {
+        if ( element.displayName != null ) {
+          people.add(element.displayName);
+          print(element.displayName);
+        }
+      });
+    });
+  }
+
+  void addContact(String displayName, String givenName, String familyName, String phone) async {
+    Contact newContact = Contact(
+      displayName: displayName,
+      givenName: givenName,
+      familyName: familyName,
+      phones: [Item(label: 'mobile', value: phone)],
+    );
+
+    print('Adding Contact $newContact');
+
+
+    await ContactsService.addContact(newContact);
+  }
 }
 
 class InputDialog extends StatelessWidget {
-  final Function(String) addPerson;
+  final Function(String, String, String, String) addContact;
 
   InputDialog({
     super.key,
-    required this.addPerson,
+    required this.addContact,
   });
 
-  var inputData = TextEditingController();
+  // add contact input data - DisplayName, GivenName, FamilyName, Phone
+  var displayName = TextEditingController();
+  var givenName = TextEditingController();
+  var familyName = TextEditingController();
+  var phone = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Add Person'),
-      content: TextField(
-        controller: inputData,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: displayName,
+            decoration: InputDecoration(
+              labelText: 'Display Name',
+              hintText: 'Enter Display Name',
+            ),
+          ),
+          TextField(
+            controller: givenName,
+            decoration: InputDecoration(
+              labelText: 'Given Name',
+              hintText: 'Enter Given Name',
+            ),
+          ),
+          TextField(
+            controller: familyName,
+            decoration: InputDecoration(
+              labelText: 'Family Name',
+              hintText: 'Enter Family Name',
+            ),
+          ),
+          TextField(
+            controller: phone,
+            decoration: InputDecoration(
+              labelText: 'Phone',
+              hintText: 'Enter Phone',
+            ),
+          ),
+        ],
       ),
       actions: [
-        ElevatedButton(
-          onPressed: () {
-            addPerson(inputData.text);
-            Navigator.of(context).pop();
+        TextButton(
+          onPressed: () async {
+            await addContact(displayName.text, givenName.text, familyName.text, phone.text);
+            Navigator.pop(context);
           },
-          child: Text('Add'),
+          child: Text('Add Contact'),
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           },
-          child: Text('cancel'),
+          child: Text('Cancel'),
         ),
       ],
     );
