@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   //   getPermission();
   // }
 
-  var people = [];
+  List<String> people = [];
 
   // This widget is the root of your application.
   @override
@@ -99,7 +99,8 @@ class _MyAppState extends State<MyApp> {
       people.clear();
       contacts.forEach((element) {
         if ( element.displayName != null ) {
-          people.add(element.displayName);
+          people.add(element.displayName!);
+          // people.add(element.displayName ?? 'Unknown');
           print(element.displayName);
         }
       });
