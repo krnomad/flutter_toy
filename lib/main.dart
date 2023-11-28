@@ -5,7 +5,30 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 void main() {
+  var inputDecorationTheme = InputDecorationTheme(
+    labelStyle: TextStyle(color: Colors.white),
+    hintStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white),
+    ),
+  );
+
   runApp(MaterialApp(
+    darkTheme: ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Colors.red[600],
+    ),
+    themeMode: ThemeMode.dark,
+    theme: ThemeData(
+      primaryColor: Colors.red[600],
+      inputDecorationTheme: inputDecorationTheme,
+    ),
     home: MyApp(),
   ));
 }
@@ -138,11 +161,50 @@ class InputDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var inputDecorationTheme = ThemeData(
+      inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.green,
+              width: 1.0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1.0,
+            ),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 1.0,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.0,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.yellow,
+                width: 1.0,
+              ),
+          ),
+      ),
+    );
+
     return AlertDialog(
       title: Text('Add Person'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          TextField(
+            // use inputDecorationTheme
+            controller: displayName,
+          ),
           TextField(
             controller: displayName,
             decoration: InputDecoration(
