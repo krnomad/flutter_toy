@@ -2,31 +2,66 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        appBarTheme: AppBarTheme(
+          color: Colors.red,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.red,
+        ),
       ),
-      home: const MyApp(),
+      home: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var tab = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Hello World"),
-        actions: const [],
+        title: Text('My App'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              print('Pressed');
+            },
+            icon: Icon(Icons.camera_alt),
+          ),
+        ],
       ),
-      body: Container(
-
-      ),
+      body: [
+        Container(
+          child: Center(
+            child: Text('tab1'),
+          ),
+        ),
+        Container(
+          child: Center(
+            child: Text('tab2'),
+          ),
+        )
+      ][tab],
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        currentIndex: tab,
+        onTap: (index) {
+          setState(() {
+            tab = index;
+          });
+        },
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",
@@ -40,3 +75,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
