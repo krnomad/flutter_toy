@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MaterialApp(
@@ -44,8 +45,23 @@ class _MyAppState extends State<MyApp> {
       ),
       body: [
         Container(
-          child: Center(
-            child: Text('tab1'),
+          child: Column(
+            children: [
+              Image.network('https://th.bing.com/th/id/OIG.6xc0LMOc4WsZF05n.Fmr?w=1024&h=1024&rs=1&pid=ImgDetMain'),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text('Hello'),
+                    ),
+                    Text('Hello'),
+                    Text('Hello'),
+                    Text('Hello'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         Container(
