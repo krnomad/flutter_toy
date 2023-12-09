@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'style.dart' as style;
 
 void main() {
   runApp(MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: Colors.red,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.red,
-        ),
-      ),
+      theme: style.themeData,
       home: MyApp(),
     ),
   );
@@ -33,37 +24,22 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My App'),
+        title: Text('Instagram'),
         actions: [
           IconButton(
             onPressed: () {
               print('Pressed');
             },
-            icon: Icon(Icons.camera_alt),
+            icon: Icon(Icons.add_box_outlined),
           ),
         ],
       ),
       body: [
-        Container(
-          child: Column(
-            children: [
-              Image.network('https://th.bing.com/th/id/OIG.6xc0LMOc4WsZF05n.Fmr?w=1024&h=1024&rs=1&pid=ImgDetMain'),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text('Hello'),
-                    ),
-                    Text('Hello'),
-                    Text('Hello'),
-                    Text('Hello'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return MainContent();
+            }),
         Container(
           child: Center(
             child: Text('tab2'),
@@ -83,11 +59,46 @@ class _MyAppState extends State<MyApp> {
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.shopping_bag_outlined),
             label: "Settings",
           ),
         ],
       ),
+    );
+  }
+}
+
+class MainContent extends StatelessWidget {
+  const MainContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Image.network(
+                  'https://th.bing.com/th/id/OIG.6xc0LMOc4WsZF05n.Fmr?w=1024&h=1024&rs=1&pid=ImgDetMain'),
+              Row(
+                children: [
+                  Text('종아요 100'),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('johnkim'),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('8월 7일'),
+                ],
+              ),
+            ],
+          )),
     );
   }
 }
